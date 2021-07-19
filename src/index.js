@@ -45,7 +45,7 @@ function getBalance(statement) {
     }
   }, 0)
 
-  return balance
+  return Number(balance.toFixed(2))
 }
 
 // GET Routes
@@ -140,8 +140,30 @@ app.put("/account", verifyIfExistsAccountCPF, (request, response) => {
 
   customer.name = name
 
-  console.table(customer)
+  console.log(customer)
   return response.status(201).send()
+})
+
+app.get('/account', verifyIfExistsAccountCPF, (request, response) => {
+  const { customer } = request
+
+  return response.json(customer)
+})
+
+app.delete('/account', verifyIfExistsAccountCPF, (request, response) => {
+  const { customer } = request
+
+  customers.splice(customer, 1)
+  
+  return response.status(204).send() 
+})
+
+app.get('/balance', verifyIfExistsAccountCPF, (request, response) => {
+  const { customer } = request
+
+  const balance = getBalance(customer.statement)
+
+  return response.json(balance)
 })
 
 app.listen(3333, () => {
